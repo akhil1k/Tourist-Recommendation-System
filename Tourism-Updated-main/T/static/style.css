@@ -11,13 +11,38 @@ body {
 }
 
 header {
-    background: linear-gradient(to right, #9330ac, #1e82db);
+    position: relative;
+    background: url('utt.jpg') no-repeat center center/cover;
     color: #fff;
-    padding: 1.5rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    padding: 80px 20px;
+    text-align: center;
+}
+
+header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* Ensure text stays above overlay */
+.header-title,
+.header-subtitle {
+    position: relative;
+    z-index: 1;
+}
+
+.header-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.header-subtitle {
+    margin-top: 0.5rem;
+    font-size: 1.2rem;
 }
 
 header h1 {
@@ -101,19 +126,6 @@ button:hover {
     padding: 1rem;
     border-left: 5px solid #5cb85c;
     border-radius: 8px;
-}
-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.header-title {
-    font-size: 2rem;
-}
-
-.header-subtitle {
-    margin-top: 0.5rem;
-    font-size: 1.25rem;
 }
 
 .navigation { 
