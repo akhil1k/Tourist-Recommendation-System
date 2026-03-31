@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tourist Recommendations</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <header>
+      <h1 class="header-title">Tourist Recommendations</h1>
+      <p class="header-subtitle">Discover top places near your destination</p>
+    </header>
+
+    <nav class="navigation">
+      <ul class="nav-list">
+        <li><a href="{{ url_for('index') }}" class="nav-link">Home</a></li>
+        <li>
+          <a href="{{ url_for('review') }}" class="nav-link">Submit Review</a>
+        </li>
+        <li>
+          <a href="{{ url_for('helplines') }}" class="nav-link"
+            >Emergency Helplines</a
+          >
+        </li>
+        <li>
+          <a href="{{ url_for('complaint') }}" class="nav-link"
+            >File Complaint</a
+          >
+        </li>
+      </ul>
+    </nav>
+
+    <main>
+      <h2 class="section-title">Get Recommendations</h2>
+      <form method="POST" id="recommendForm" onsubmit="showLoading()">
+        <label for="destination">Enter destination:</label>
+        <input type="text" name="destination" required />
+        <label for="city">Enter City:</label>
+        <input type="text" name="city" required />
+        <label for="country">Country:</label>
+        <input type="text" name="country" required />
+        <button type="submit" id="submitBtn">Get Recommendations</button>
+      </form>
+
+      <!-- Loading message (hidden by default) -->
+      <div id="loadingMessage" style="display: none; text-align: center; padding: 30px;">
+        <div class="spinner" style="
+          border: 4px solid #ddd;
+          border-top: 4px solid #1e82db;
+          border-radius: 50%;
+          width: 40px;
+          height: 40px;
+          animation: spin 1s linear infinite;
+          margin: 0 auto 15px auto;
+        "></div>
+        <p style="font-size: 1.1rem; color: #555;">Loading recommendations, please wait...</p>
+      </div>
+
+      <style>
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      </style>
+
+      <script>
+        function showLoading() {
+          document.getElementById('loadingMessage').style.display = 'block';
+          document.getElementById('submitBtn').disabled = true;
+          document.getElementById('submitBtn').textContent = 'Please wait...';
+        }
+      </script>
+
+      {% if recommendations %}
+      <div class="output-section">
+        <h3>Recommended Places:</h3>
+        <ul style="list-style-type: none; padding-left: 0;">
+          {% for place in recommendations %}
+            {% if ':' in place %}
+              {% set parts = place.split(':', 1) %}
+              <li style="margin-bottom: 12px; line-height: 1.5;"><strong>{{ parts[0] }}:</strong>{{ parts[1] }}</li>
+            {% else %}
+              <li style="margin-bottom: 12px; line-height: 1.5;">{{ place }}</li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+    </main>
+  </body>
+</html>

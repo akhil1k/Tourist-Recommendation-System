@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uttarakhand Tourism</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1 class="header-title">Welcome to Uttarakhand Tourism</h1>
+            <p class="header-subtitle">
+                Explore the beauty of Uttarakhand with our reviews and services
+            </p>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navigation">
+        <div class="container">
+            <ul class="nav-list">
+                <li><a href="{{ url_for('register') }}">Register</a></li>
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+                <li><a href="{{ url_for('review') }}">Submit a Review</a></li>
+                <li><a href="{{ url_for('complaint') }}">File a Complaint</a></li>
+                <li><a href="{{ url_for('helplines') }}">Helplines</a></li>
+                <li><a href="{{ url_for('recommend') }}">Recommendations</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Recent Reviews Section -->
+    <section class="recent-reviews">
+        <div class="container">
+            <h2 class="section-title">Recent Reviews</h2>
+
+            <div class="reviews-grid">
+                {% for review in reviews %}
+                <div class="review-card">
+                    <h3 class="review-place">{{ review.place_name }}</h3>
+                    <p class="review-rating">⭐ Rating: {{ review.rating }} / 5</p>
+                    <p class="review-text">{{ review.review_text }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+</body>
+
+</html>
