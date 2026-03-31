@@ -1,7 +1,7 @@
 import os
 from groq import Groq
 
-# Initialize the Groq client
+# Get Groq API Key from .env file
 def init_groq_client():
     api_key = os.getenv("GROQ_API_KEY")
     if not api_key:
@@ -11,6 +11,7 @@ def init_groq_client():
 
 client = init_groq_client()
 
+# Call API
 def get_recommendations(destination, city, country):
     """
     Use Groq (Llama 3.3) to generate tourist recommendations with a strict 10-15km radius.
