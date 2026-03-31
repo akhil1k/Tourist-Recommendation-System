@@ -10,18 +10,8 @@
 
 <body>
 
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <h1 class="header-title">Welcome to Uttarakhand Tourism</h1>
-            <p class="header-subtitle">
-                Explore the beauty of Uttarakhand with our reviews and services
-            </p>
-        </div>
-    </header>
-
-    <!-- Navigation -->
-    <nav class="navigation">
+    <!-- Navigation (Moved to Top & Transparent) -->
+    <nav class="navigation transparent-nav" id="navbar">
         <div class="container">
             <ul class="nav-list">
                 <li><a href="{{ url_for('register') }}">Register</a></li>
@@ -34,22 +24,75 @@
         </div>
     </nav>
 
-    <!-- Recent Reviews Section -->
+    <!-- Hero Section (Full Screen Parallax) -->
+    <header class="header">
+        <div class="container">
+            <h1 class="header-title">Welcome to Uttarakhand</h1>
+            <!-- Typewriter injection site -->
+            <p class="header-subtitle" id="typewriter"></p>
+            <a href="{{ url_for('recommend') }}" class="cta-button">🚀 Get AI Recommendations</a>
+        </div>
+    </header>
+
+    <!-- Recent Reviews Section (Modern Grid) -->
     <section class="recent-reviews">
         <div class="container">
-            <h2 class="section-title">Recent Reviews</h2>
+            <h2 class="section-title">Verified Explorer Reviews</h2>
 
             <div class="reviews-grid">
-                {% for review in reviews %}
-                <div class="review-card">
-                    <h3 class="review-place">{{ review.place_name }}</h3>
-                    <p class="review-rating">⭐ Rating: {{ review.rating }} / 5</p>
-                    <p class="review-text">{{ review.review_text }}</p>
-                </div>
-                {% endfor %}
+                {% if reviews %}
+                    {% for review in reviews %}
+                    <div class="review-card">
+                        <span class="review-rating">
+                            {% for i in range(review.rating) %}⭐{% endfor %}
+                        </span>
+                        <h3 class="review-place">{{ review.place_name }}</h3>
+                        <p class="review-text">"{{ review.review_text }}"</p>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <!-- Beautiful Empty State Placeholder -->
+                    <div class="empty-state">
+                        <p>No reviews yet. Be the first to share your experience!</p>
+                        <a href="{{ url_for('review') }}" class="secondary-button">Submit a Review</a>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </section>
+
+    <!-- Advanced JavaScript UI Effects -->
+    <script>
+        // 1. Transparent to Frosted Glass Navbar Scroll Effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 80) {
+                navbar.classList.add('solid-nav');
+                navbar.classList.remove('transparent-nav');
+            } else {
+                navbar.classList.add('transparent-nav');
+                navbar.classList.remove('solid-nav');
+            }
+        });
+
+        // 2. Typewriter Effect for Hero Subtitle
+        const text = "Explore the majestic beauty of the Himalayas with our AI travel plans.";
+        let i = 0;
+        const speed = 65; // MS delay per letter
+        
+        function typeWriter() {
+            if (i < text.length) {
+                document.getElementById("typewriter").innerHTML += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, speed);
+            }
+        }
+        
+        // Trigger Typewriter when page loads
+        window.onload = function() {
+            setTimeout(typeWriter, 500); // Wait 0.5s before typing starts
+        };
+    </script>
 
 </body>
 

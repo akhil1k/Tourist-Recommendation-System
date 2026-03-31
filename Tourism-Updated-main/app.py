@@ -5,19 +5,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.exc import IntegrityError
 import os
 from dotenv import load_dotenv
-from groq import Groq
+from recommender import get_recommendations
 
 # Load env vars from .env
 load_dotenv()
-
-# Environment variables
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-if not GROQ_API_KEY:
-    raise ValueError("Groq API key not found. Set GROQ_API_KEY in your .env file.")
-
-# Configure Groq client
-client = Groq(api_key=GROQ_API_KEY)
-
 
 app = Flask(__name__)
 
@@ -63,50 +54,6 @@ class Complaint(db.Model):
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-
-
-# -----------------------
-# Groq recommendation helper
-# -----------------------
-def get_recommendations(destination, city, country):
-    """
-    Use Groq (Llama 3) to generate tourist recommendations.
-    Returns a list of bullet-point strings.
-    """
-    prompt = f"""You are a knowledgeable local travel guide. List the top 5 must-visit tourist attractions strictly located within a 10 to 15 kilometer radius of "{destination}" in {city}, {country}. Do NOT include places that are far away from this specific location.
-
-For each attraction, provide:
-• The name of the attraction
-• A 2-3 line engaging summary describing why it is worth visiting, briefly mentioning approximately how far it is from {destination}.
-
-Format your response as a simple bullet-point list. Each item should start with the attraction name 
-followed by a colon, then the summary. Do not use numbering, use bullet points (•) only.
-Do not include any introduction or closing text, just the bullet points."""
-
-    try:
-        print(f"\n🔍 Searching recommendations for: {destination}, {city}, {country}")
-        response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.7,
-            max_tokens=1024
-        )
-
-        result_text = response.choices[0].message.content
-        if result_text:
-            lines = result_text.strip().split("\n")
-            recommendations = [line.strip() for line in lines if line.strip()]
-            print(f"✅ Successfully got {len(recommendations)} recommendations")
-            return recommendations
-        else:
-            print("⚠️ Groq returned an empty response")
-            return ["No recommendations could be generated. Please try again."]
-
-    except Exception as e:
-        print(f"\n❌ ERROR in get_recommendations:")
-        print(f"   Type: {type(e).__name__}")
-        print(f"   Message: {str(e)}")
-        return [f"Error getting recommendations: {str(e)}"]
 
 
 # -----------------------
