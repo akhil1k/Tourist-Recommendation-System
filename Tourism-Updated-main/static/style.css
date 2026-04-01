@@ -40,9 +40,24 @@ body {
 .nav-list { 
     display: flex;
     justify-content: center;
+    align-items: center;
     list-style: none;
-    margin: 0;
+    margin: 0 auto;
     gap: 30px;
+    width: 100%;
+    position: relative;
+    max-width: 1200px;
+}
+
+/* Strictly pinning Register and Login to the right corner */
+.nav-list li:nth-child(1) {
+    position: absolute;
+    right: 20px;
+}
+
+.nav-list li:nth-child(2) {
+    position: absolute;
+    right: 110px;
 }
 
 /* Default links logic (white for subpages) */
@@ -55,7 +70,8 @@ body {
 }
 
 .navigation a:hover {
-    color: #ffe082;
+    color: #fbd76b;
+    text-decoration: underline;
 }
 
 /* Home Page Specific JS state overwrites */
