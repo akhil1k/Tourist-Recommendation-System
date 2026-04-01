@@ -1,0 +1,304 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f8fafc; /* Sleeker premium off-white background */
+    color: #333;
+}
+
+/* -------------- HERO & NAVBAR -------------- */
+
+.navigation { 
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    transition: all 0.4s ease;
+    /* This gradient is for the OTHER subpages that don't have JS navbars */
+    background: linear-gradient(135deg, #1e82db, #9330ac); 
+    padding: 15px 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.transparent-nav {
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 25px 0 !important;
+}
+
+.solid-nav {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+    padding: 12px 0 !important;
+}
+
+.nav-list { 
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    margin: 0;
+    gap: 30px;
+}
+
+/* Default links logic (white for subpages) */
+.navigation a {
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+.navigation a:hover {
+    color: #ffe082;
+}
+
+/* Home Page Specific JS state overwrites */
+.transparent-nav a {
+    color: #fff !important;
+}
+
+.transparent-nav a:hover {
+    color: #ffe082 !important;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+
+.solid-nav a {
+    color: #333 !important;
+}
+
+.solid-nav a:hover {
+    color: #1e82db !important;
+}
+
+/* -------------- HEADER (HERO) IMAGE -------------- */
+header {
+    position: relative;
+    background: url('utt.jpg') no-repeat center center/cover;
+    background-attachment: fixed; /* JS PARALLAX SCROLL EFFECT */
+    color: #fff;
+    padding: 0 20px;
+    text-align: center;
+    height: 100vh; /* Fills the whole screen like Airbnb */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+header::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    /* Soft dark gradient so the typewriter text pops out beautifully */
+    background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6)); 
+}
+
+/* Elements above overlay */
+.header-title,
+.header-subtitle,
+.cta-button {
+    position: relative;
+    z-index: 1;
+}
+
+.header-title {
+    font-size: 3.8rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    letter-spacing: -1px;
+}
+
+.header-subtitle {
+    font-size: 1.5rem;
+    font-weight: 300;
+    opacity: 0.95;
+    min-height: 45px; /* Reserves space while typewriter types */
+}
+
+/* Sleek primary button */
+.cta-button {
+    display: inline-block;
+    margin-top: 40px;
+    padding: 16px 45px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #fff !important;
+    background: linear-gradient(135deg, #1e82db, #9330ac);
+    border-radius: 50px;
+    text-decoration: none;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cta-button:hover {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+}
+
+/* -------------- OTHER APP PAGES (Forms, Details) -------------- */
+main {
+    max-width: 960px;
+    margin: 7rem auto 2rem; /* The 7rem margin prevents the fixed subpage navbar from covering the main content */
+    padding: 2.5rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+h2 {
+    color: #1e82db;
+    margin-bottom: 1.5rem;
+    border-bottom: 3px solid #e3f2fd;
+    padding-bottom: 0.5rem;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    color: #444;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 14px 15px;
+    margin-bottom: 1.5rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #f8fafc;
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: #1e82db;
+    box-shadow: 0 0 0 3px rgba(30, 130, 219, 0.15);
+    outline: none;
+    background: #fff;
+}
+
+button {
+    padding: 15px 25px;
+    background-color: #1e82db;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s;
+    margin-top: 10px;
+    width: 100%; 
+}
+
+button:hover {
+    background-color: #1565c0;
+    transform: translateY(-2px);
+}
+
+.output-section {
+    margin-top: 2.5rem;
+    background: #f8fafc;
+    padding: 2rem;
+    border-left: 5px solid #1e82db;
+    border-radius: 8px;
+}
+
+/* -------------- RECENT REVIEWS SECTION (Premium Grid Design) -------------- */
+.recent-reviews {
+    max-width: 1200px;
+    margin: 5rem auto;
+    padding: 0 2rem;
+}
+
+.section-title {
+    color: #1e82db;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 4rem;
+    border: none;
+    text-align: center;
+}
+
+.reviews-grid { 
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+}
+
+.review-card {
+    background: #fff;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    border-top: 5px solid #9330ac;
+    display: flex;
+    flex-direction: column;
+}
+
+.review-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+}
+
+.review-rating {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+}
+
+.review-place {
+    color: #222;
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+}
+
+.review-text {
+    color: #555;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    font-style: italic;
+}
+
+/* Beautiful Empty State HTML structure for when no reviews exist */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    grid-column: 1 / -1; 
+}
+
+.empty-state p {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.secondary-button {
+    display: inline-block;
+    padding: 12px 35px;
+    background: #fff;
+    color: #1e82db;
+    border: 2px solid #1e82db;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.secondary-button:hover {
+    background: #1e82db;
+    color: #fff;
+}

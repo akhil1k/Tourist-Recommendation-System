@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Login</title>
+    <!-- We switch from the old stylelogin.css to the Premium Global style.css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .auth-container {
+            max-width: 450px;
+            margin: 10rem auto 4rem; /* Safely pushes it below the global fixed navbar */
+            padding: 3rem;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); /* Premium soft shadow */
+            border-top: 5px solid #1e82db;
+        }
+        .auth-title {
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #1e82db;
+            margin-bottom: 2rem;
+            border: none;
+        }
+        .toggle-link {
+            text-align: center;
+            margin-top: 2rem;
+            color: #666;
+            font-size: 1.05rem;
+        }
+        .toggle-link a {
+            color: #9330ac;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .toggle-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Unified Application Navigation -->
+    <nav class="navigation">
+        <ul class="nav-list">
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('register') }}">Register</a></li>
+            <li><a href="{{ url_for('login') }}">Login</a></li>
+            <li><a href="{{ url_for('review') }}">Submit a Review</a></li>
+            <li><a href="{{ url_for('complaint') }}">File a Complaint</a></li>
+            <li><a href="{{ url_for('recommend') }}">Recommendations</a></li>
+        </ul>
+    </nav>
+
+    <!-- Beautiful Authorized Card -->
+    <div class="auth-container">
+        <h2 class="auth-title">Welcome Back</h2>
+
+        <!-- Flash messages integration so users know exactly if they typed a wrong password -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div style="background: #ffebeb; color: #d00000; padding: 12px; border-radius: 8px; margin-bottom: 25px; text-align: center; border: 1px solid #ffc2c2; font-weight: bold;">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <label for="email">Email Address</label>
+            <input type="email" name="email" placeholder="example@email.com" required>
+
+            <label for="password">Password</label>
+            <input type="password" name="password" placeholder="••••••••" required>
+
+            <button type="submit">Log In</button>
+        </form>
+
+        <div class="toggle-link">
+            Don't have an account? <a href="{{ url_for('register') }}">Create one</a>
+        </div>
+    </div>
+
+</body>
+</html>
