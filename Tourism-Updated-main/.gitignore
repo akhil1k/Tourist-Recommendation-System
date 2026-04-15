@@ -1,7 +1,50 @@
+# --- Virtual Environment ---
 venv/
+env/
+.venv/
+
+# --- Python Cache ---
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+*.pycache
+
+# --- Environment Variables ---
 .env
+.env.*
+
+# --- Database ---
 tourism.db
+*.db
+*.sqlite
+*.sqlite3
+
+# --- Debug / Temp Scripts ---
+check_db.py
+
+# --- Editor & IDE ---
 .vscode/
 .idea/
+*.suo
+*.user
+*.swp
+*.swo
+*~
+
+# --- OS Files ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Python Build & Dist ---
+*.egg-info/
+dist/
+build/
+*.egg
+*.whl
+MANIFEST
+
+# --- Logs ---
+*.log
+flask_session/

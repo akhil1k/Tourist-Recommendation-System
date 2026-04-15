@@ -1,0 +1,19 @@
+<!-- Avatar Dropdown Toggle Script — include at bottom of every page body -->
+<script>
+    (function () {
+        var btn = document.getElementById('avatarBtn');
+        var dropdown = document.getElementById('userDropdown');
+        if (!btn || !dropdown) return;
+
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            dropdown.classList.toggle('open');
+        });
+
+        // Close when clicking anywhere else on the page
+        document.addEventListener('click', function () {
+            dropdown.classList.remove('open');
+        });
+    })();
+</script>
+    

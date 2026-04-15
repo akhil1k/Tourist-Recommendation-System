@@ -55,10 +55,10 @@ body {
     right: 20px;
 }
 
-.nav-list li:nth-child(2) {
+/* .nav-list li:nth-child(2) {
     position: absolute;
     right: 110px;
-}
+} */
 
 /* Default links logic (white for subpages) */
 .navigation a {
@@ -96,11 +96,11 @@ body {
 header {
     position: relative;
     background: url('utt.jpg') no-repeat center center/cover;
-    background-attachment: fixed; /* JS PARALLAX SCROLL EFFECT */
+    background-attachment: fixed; 
     color: #fff;
     padding: 0 20px;
     text-align: center;
-    height: 100vh; /* Fills the whole screen like Airbnb */
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -111,7 +111,6 @@ header::before {
     content: "";
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    /* Soft dark gradient so the typewriter text pops out beautifully */
     background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6)); 
 }
 
@@ -317,4 +316,94 @@ button:hover {
 .secondary-button:hover {
     background: #1e82db;
     color: #fff;
+}
+
+/* -------------- USER AVATAR DROPDOWN -------------- */
+.user-menu {
+    position: absolute !important;
+    right: 20px !important;
+}
+
+.avatar-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1e82db, #9330ac);
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 3px solid rgba(255,255,255,0.6);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    user-select: none;
+}
+
+.avatar-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+}
+
+.user-dropdown {
+    display: none;
+    position: absolute;
+    top: 56px;
+    right: 0;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.15);
+    min-width: 180px;
+    overflow: hidden;
+    z-index: 2000;
+    animation: dropIn 0.2s ease forwards;
+}
+
+@keyframes dropIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.user-dropdown.open {
+    display: block;
+}
+
+.dropdown-header {
+    padding: 14px 18px 10px;
+    font-size: 0.85rem;
+    color: #999;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.user-dropdown a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 18px;
+    color: #333 !important;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none !important;
+    transition: background 0.2s ease;
+}
+
+.user-dropdown a:hover {
+    background: #f5f8ff;
+    color: #1e82db !important;
+    text-decoration: none !important;
+}
+
+.user-dropdown .signout-link {
+    border-top: 1px solid #f0f0f0;
+    color: #e53935 !important;
+}
+
+.user-dropdown .signout-link:hover {
+    background: #fff5f5;
+    color: #e53935 !important;
 }

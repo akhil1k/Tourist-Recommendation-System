@@ -13,18 +13,15 @@ client = init_groq_client()
 
 # Call API
 def get_recommendations(destination, city, country):
-    """
-    Use Groq (Llama 3.3) to generate tourist recommendations with a strict 10-15km radius.
-    Returns a list of parsed strings.
-    """
+
     if not client:
         return ["Error: AI services are unconfigured. Please configure your GROQ_API_KEY in the .env file."]
 
-    prompt = f"""You are a knowledgeable local travel guide. List the top 5 must-visit tourist attractions strictly located within a 10 to 15 kilometer radius of "{destination}" in {city}, {country}. Do NOT include places that are far away from this specific location.
+    prompt = f"""You are a knowledgeable local travel guide. List the top 10 must-visit tourist attractions strictly located within a 0 to 15 kilometer radius of "{destination}" in {city}, {country}. Do NOT include places that are far away from this specific location.
 
 For each attraction, provide:
 • The name of the attraction
-• A 2-3 line engaging summary describing why it is worth visiting, briefly mentioning approximately how far it is from {destination}.
+• A 4-5 line engaging summary describing why it is worth visiting, briefly mentioning approximately how far it is from {destination}.
 
 Format your response as a simple bullet-point list. Each item should start with the attraction name 
 followed by a colon, then the summary. Do not use numbering, use bullet points (•) only.

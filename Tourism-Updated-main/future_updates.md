@@ -162,3 +162,8 @@ Open your `templates/recommend.html` file. Place this beautiful weather widget s
       </div>
       {% endif %}
 ```
+
+Future updates : add night mode in website
+create a user profile and his wishlist or bucket list to save the places he wants to visit
+
+add different categories, for tourist places like natural, historical, religious, etc.
