@@ -8,6 +8,10 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='style.css') }}"
     />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='recommend.css') }}"
+    />
   </head>
   <body>
     <header>
@@ -22,7 +26,7 @@
             <div class="avatar-btn" id="avatarBtn">{{ current_user.username[0].upper() }}</div>
             <div class="user-dropdown" id="userDropdown">
                 <div class="dropdown-header">{{ current_user.username }}</div>
-                <a href="#">&#128100; Your Profile</a>
+                <a href="{{ url_for('profile') }}">&#128100; Your Profile</a>
                 <a href="{{ url_for('auth.logout') }}" class="signout-link">&#128274; Sign Out</a>
             </div>
         </li>
@@ -45,29 +49,27 @@
         <input type="text" name="city" required />
         <label for="country">Country:</label>
         <input type="text" name="country" required />
+        
+        <label for="category">Category (Optional):</label>
+        <select name="category" id="category" style="width: 100%; padding: 12px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #818181; font-size: 1rem; font-family: inherit; background: white;">
+          <option value="All">All Types</option>
+          <option value="Religious">Religious</option>
+          <option value="Historical">Historical</option>
+          <option value="Natural">Natural & Scenic</option>
+          <option value="Adventure">Adventure</option>
+          <option value="Food">Food & Culinary</option>
+          <option value="Shopping">Shopping</option>
+          <option value="Entertainment">Entertainment</option>
+        </select>
+
         <button type="submit" id="submitBtn">Get Recommendations</button>
       </form>
 
       <!-- Loading message (hidden by default) -->
-      <div id="loadingMessage" style="display: none; text-align: center; padding: 30px;">
-        <div class="spinner" style="
-          border: 4px solid #ddd;
-          border-top: 4px solid #1e82db;
-          border-radius: 50%;
-          width: 40px;
-          height: 40px;
-          animation: spin 1s linear infinite;
-          margin: 0 auto 15px auto;
-        "></div>
-        <p style="font-size: 1.1rem; color: #555;">Loading recommendations, please wait...</p>
+      <div id="loadingMessage" style="display: none;">
+        <div class="spinner"></div>
+        <p>Loading recommendations, please wait...</p>
       </div>
-
-      <style>
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-      </style>
 
       <script>
         function showLoading() {
@@ -77,22 +79,111 @@
         }
       </script>
 
-      {% if recommendations %}
-      <div class="output-section">
-        <h3>Recommended Places:</h3>
-        <ul style="list-style-type: none; padding-left: 0;">
-          {% for place in recommendations %}
-            {% if ':' in place %}
-              {% set parts = place.split(':', 1) %}
-              <li style="margin-bottom: 12px; line-height: 1.5;"><strong>{{ parts[0] }}:</strong>{{ parts[1] }}</li>
-            {% else %}
-              <li style="margin-bottom: 12px; line-height: 1.5;">{{ place }}</li>
-            {% endif %}
-          {% endfor %}
-        </ul>
-      </div>
-      {% endif %}
     </main>
+
+    {% if recommendations %}
+    <section class="recommendations-wrapper">
+      <h2 class="section-title" style="text-align: center; border: none; margin-bottom: 2rem;">Top Recommendations</h2>
+      <div class="recommendation-list">
+        {% for rec in recommendations %}
+          {% if ':' in rec.text %}
+            {% set parts = rec.text.split(':', 1) %}
+            <div class="recommendation-card">
+              <div class="image-container" data-place="{{ rec.place_name }}">
+                <div class="rec-image-placeholder">📸</div>
+              </div>
+              <div class="rec-content">
+                <div class="rec-header">
+                  <h3>{{ parts[0] }}</h3>
+                  <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                    <a href="https://www.google.com/maps/search/?api=1&query={{ (parts[0] ~ ', ' ~ city ~ ', ' ~ country)|urlencode }}" class="map-button" target="_blank" rel="noopener noreferrer">
+                       📍 View On Map
+                    </a>
+                    {% if current_user.is_authenticated %}
+                    <button class="wishlist-button" onclick="addToWishlist(this)" data-place="{{ parts[0] }}" data-city="{{ city }}" data-country="{{ country }}">
+                       ➕ Bucket List
+                    </button>
+                    {% else %}
+                    <button class="wishlist-button locked" onclick="alert('Sign in required to add this place to your Bucket List!')">
+                       🔒 Bucket List
+                    </button>
+                    {% endif %}
+                  </div>
+                </div>
+                <p class="rec-desc">{{ parts[1] }}</p>
+              </div>
+            </div>
+          {% else %}
+            <div class="recommendation-card">{{ rec.text }}</div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
     {% include 'avatar_script.html' %}
+    {% include 'footer.html' %}
+    {% include 'theme_toggle.html' %}
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Asynchronously fetch Wikipedia images for blazing fast load times
+        const containers = document.querySelectorAll('.image-container');
+        
+        containers.forEach(container => {
+            const place = container.getAttribute('data-place');
+            if(!place) return;
+            
+            // Using origin=* allows browser frontend to bypass CORS errors securely
+            const url = `https://en.wikipedia.org/w/api.php?origin=*&action=query&format=json&generator=search&gsrsearch=${encodeURIComponent(place)}&gsrlimit=1&prop=pageimages&pithumbsize=400`;
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const pages = data.query?.pages;
+                    if(pages) {
+                        for(let pid in pages) {
+                            const imgUrl = pages[pid].thumbnail?.source;
+                            if(imgUrl) {
+                                container.innerHTML = `<img src="${imgUrl}" alt="${place}" class="rec-image" loading="lazy" style="animation: fadeIn 0.4s ease-out;">`;
+                                break;
+                            }
+                        }
+                    }
+                })
+                .catch(err => console.error("Error fetching image for " + place, err));
+        });
+    });
+
+    // Asynchronous Wishlist Addition to prevent page reload loss
+    function addToWishlist(btn) {
+        btn.disabled = true;
+        btn.innerHTML = "⏳ Adding...";
+        
+        let formData = new FormData();
+        formData.append('place_name', btn.getAttribute('data-place'));
+        formData.append('city', btn.getAttribute('data-city'));
+        formData.append('country', btn.getAttribute('data-country'));
+        formData.append('notes', 'Added from AI Recommendations');
+
+        fetch("{{ url_for('wishlist_add') }}", {
+            method: "POST",
+            body: formData
+        })
+        .then(() => {
+            btn.innerHTML = "✅ Added!";
+            btn.classList.add('added');
+        })
+        .catch(err => {
+            btn.innerHTML = "❌ Error";
+            btn.disabled = false;
+        });
+    }
+    </script>
+    <style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+    </style>
   </body>
 </html>

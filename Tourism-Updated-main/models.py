@@ -36,3 +36,13 @@ class Complaint(db.Model):
     complaint_text = db.Column(db.Text, nullable=False)
     status = db.Column(db.String(50), default='Pending')
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+
+class Wishlist(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    place_name = db.Column(db.String(150), nullable=False)
+    city = db.Column(db.String(100), nullable=True)
+    country = db.Column(db.String(100), nullable=True)
+    notes = db.Column(db.Text, nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User', backref=db.backref('wishlist', lazy='dynamic'))

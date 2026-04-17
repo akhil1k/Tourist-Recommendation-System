@@ -1,0 +1,410 @@
+/* -------------- RECENT REVIEWS SECTION (Premium Grid Design) -------------- */
+.recent-reviews {
+    max-width: 1200px;
+    margin: 5rem auto;
+    padding: 0 2rem;
+}
+
+.section-title {
+    color: #1e82db;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 4rem;
+    border: none;
+    text-align: center;
+}
+
+.reviews-grid { 
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+}
+
+.review-card {
+    background: #fff;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    border-top: 5px solid #9330ac;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.384);
+}
+
+.review-card:hover {
+    transform: translateY(-8px);
+    /* box-shadow: 0 0 0 2px #9330ac; */
+     box-shadow: 
+    0 0 0 2px #9330ac,
+    0 0 15px rgba(147, 48, 172, 0.4),  /* glow */
+    0 10px 30px rgba(0, 0, 0, 0.3);    /* depth */
+
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.2rem;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.review-author-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.review-author-avatar {
+    width: 35px;
+    height: 35px;
+    background: linear-gradient(135deg, #1e82db, #9330ac);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.review-author {
+    font-size: 1.05rem;
+    color: #444;
+}
+
+.review-author strong {
+    color: #333;
+}
+
+.review-rating {
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+
+.review-place {
+    color: #222;
+    font-size: 1.3rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.review-text {
+    color: #555;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    font-style: italic;
+}
+
+/* Beautiful Empty State HTML structure for when no reviews exist */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    grid-column: 1 / -1; 
+}
+
+.empty-state p {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.secondary-button {
+    display: inline-block;
+    padding: 12px 35px;
+    background: #fff;
+    color: #1e82db;
+    border: 2px solid #1e82db;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.secondary-button:hover {
+    background: #1e82db;
+    color: #fff;
+}
+
+/* Index Dark Mode */
+body.dark-mode .review-card, body.dark-mode .empty-state { background: #1e1e1e; border-top-color:#9330ac; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+body.dark-mode .review-header { border-bottom-color: #333; }
+body.dark-mode .review-author-avatar { background: linear-gradient(135deg, #1e82db, #f59e0b); }
+body.dark-mode .review-author { color: #ccc; }
+body.dark-mode .review-author strong { color: #fff; }
+body.dark-mode .review-text { color: #aaa; }
+body.dark-mode .review-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 2px 20px #77278bb7;
+}
+
+/* -------------------------------------
+   5. Features Section
+------------------------------------- */
+.features-section {
+    padding: 5rem 0 3rem;
+    background-color: #f9fbff;
+}
+
+.features-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.section-subtitle {
+    color: #666;
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.5;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2rem;
+}
+
+.feature-card {
+    background: #fff;
+    padding: 2.5rem 2rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.384);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-top: 4px solid #1e82db;
+    margin: 10px;
+}
+
+.feature-card:nth-child(even) {
+    border-top-color: #9330ac;
+}
+
+.feature-card:hover {
+    box-shadow: 0 0 0 2px #1e82db;
+    transform: translateY(-8px);
+}
+
+.feature-card:nth-child(even):hover {
+    box-shadow: 0 0 0 2px #9330ac;
+    transform: translateY(-8px);
+}
+
+.feature-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1.2rem;
+}
+
+.feature-card h3 {
+    margin-bottom: 1rem;
+    color: #222;
+    font-size: 1.3rem;
+}
+
+.feature-card p {
+    color: #555;
+    line-height: 1.6;
+    font-size: 0.95rem;
+    margin: 0;
+    margin-bottom: 20px;
+}
+
+.feature-link {
+    display: inline-block;
+    padding: 6px 15px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #1e82db;
+    background: #e8f3fc;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.feature-card:nth-child(even) .feature-link {
+    color: #9330ac;
+    background: #fdf2f8;
+}
+
+.feature-link:hover {
+    background: #d0e7fb;
+}
+
+.feature-card:nth-child(even) .feature-link:hover {
+    background: #fbcfe8;
+}
+
+/* Dark Mode Overrides for Features */
+body.dark-mode .features-section {
+    background-color: #121212;
+}
+
+body.dark-mode .feature-card {
+    background-color: #1e1e1e;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+body.dark-mode .feature-card:hover {
+    box-shadow: 0 10px 20px rgba(30,130,219,0.3);
+}
+
+body.dark-mode .feature-card:nth-child(even):hover {
+    box-shadow: 0 10px 20px rgba(147, 48, 172, 0.3);
+}
+
+body.dark-mode .section-subtitle,
+body.dark-mode .feature-card p {
+    color: #aaa;
+}
+
+body.dark-mode .feature-card h3 {
+    color: #eee;
+}
+
+body.dark-mode .feature-link {
+    background: rgba(30, 130, 219, 0.15);
+    color: #4da3ff;
+}
+
+body.dark-mode .feature-card:nth-child(even) .feature-link {
+    background: rgba(147, 48, 172, 0.15);
+    color: #d18ff0;
+}
+
+/* -------------------------------------
+   6. Popular Destinations Section
+------------------------------------- */
+.popular-places {
+    padding: 5rem 0;
+    background-color: #f8fafc; /* Beautiful distinct Light Mode background */
+}
+
+.popular-places .section-title {
+    text-align: center;
+    border: none;
+}
+
+.dest-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2.5rem;
+}
+
+.dest-card {
+    background: #fff; /* White against off-white background */
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.384);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin: 10px;
+}
+
+.dest-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 0 0 2px #1e82db; /* Clean standard shadow */
+}
+
+.dest-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+.dest-content {
+    padding: 1.8rem;
+}
+
+.dest-content h3 {
+    margin: 0 0 8px 0;
+    color: #222;
+    font-size: 1.5rem;
+}
+
+.dest-cat {
+    margin: 0 0 15px 0;
+    font-size: 0.95rem;
+    color: #9330ac;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.dest-tags {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.weather-tag {
+    background: #e8f3fc;
+    color: #1e82db;
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.time-tag {
+    background: #fdf2f8;
+    color: #db2777;
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.dest-explore-btn {
+    display: inline-block;
+    padding: 10px 25px;
+    background: linear-gradient(135deg, #1e82db, #9330ac);
+    color: #fff;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.95rem;
+    box-shadow: 0 5px 15px rgba(30,130,219,0.3);
+    transition: transform 0.2s;
+}
+
+.dest-explore-btn:hover {
+    transform: scale(1.05);
+}
+
+/* Dark Mode Overrides for Popular Places */
+body.dark-mode .popular-places {
+    background-color: #0d0d0d;
+}
+
+body.dark-mode .dest-card {
+    background-color: #1e1e1e;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+body.dark-mode .dest-card:hover {
+    box-shadow: 0 1px 15px #3777bbaf; /* Clean dark elevation shadow */
+}
+
+body.dark-mode .dest-content h3 {
+    color: #eee;
+}
+
+body.dark-mode .dest-cat {
+    color: #df97f7;
+}
+
+body.dark-mode .weather-tag {
+    background: rgba(30, 130, 219, 0.2);
+    color: #4da3ff;
+}
+
+body.dark-mode .time-tag {
+    background: rgba(219, 39, 119, 0.2);
+    color: #f472b6;
+}

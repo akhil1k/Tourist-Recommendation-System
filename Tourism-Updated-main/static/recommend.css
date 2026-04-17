@@ -1,0 +1,238 @@
+/* ---- Recommendations Page Styles ---- */
+
+#loadingMessage {
+    text-align: center;
+    padding: 30px;
+}
+
+.spinner {
+    border: 4px solid #ddd;
+    border-top: 4px solid #1e82db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#loadingMessage p {
+    font-size: 1.1rem;
+    color: #555;
+}
+
+.recommendations-wrapper {
+    max-width: 960px;
+    margin: 0 auto 4rem;
+    padding: 0 1rem;
+}
+
+.recommendation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.recommendation-card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.recommendation-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(30,130,219,0.15);
+}
+
+.image-container {
+    width: 100%;
+    text-align: center;
+}
+
+.rec-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 100%;
+    border-radius: 20px;
+    flex-shrink: 0;
+}
+
+.rec-image-placeholder {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    padding: 3rem 0;
+    border-radius: 0;
+    background: #f0f4f8;
+    text-align: center;
+    font-size: 4.5rem;
+    flex-shrink: 0;
+    color: #cbd5e1;
+}
+
+.rec-content {
+    padding: 1.5rem 1.8rem;
+    border-top: 4px solid #1e82db;
+}
+
+.rec-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.rec-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #222;
+}
+
+.rec-desc {
+    margin: 0;
+    line-height: 1.6;
+    color: #555;
+    font-size: 1.05rem;
+}
+
+/* Map Button */
+.map-button {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    padding: 4px 10px;
+    background: #e8f3fc;
+    border: 1px solid #b3d7f5;
+    color: #1e82db;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.map-button:hover {
+    background: #d0e7fb;
+    transform: translateY(-1px);
+}
+
+/* Wishlist Button */
+.wishlist-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    background: #faf0ff;
+    border: 1px solid #e1c5ee;
+    color: #9330ac;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    cursor: pointer;
+}
+
+.wishlist-button:hover {
+    background: #f4d9ff;
+    transform: translateY(-1px);
+}
+
+.wishlist-button.locked {
+    background: #f1f5f9;
+    border-color: #e2e8f0;
+    color: #94a3b8;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.wishlist-button.locked:hover {
+    transform: none;
+    background: #f1f5f9;
+}
+
+.wishlist-button.added {
+    background: #dcfce7 !important;
+    border-color: #bbf7d0 !important;
+    color: #166534 !important;
+}
+
+/* Dark Mode Overrides */
+body.dark-mode #loadingMessage p {
+    color: #aaa;
+}
+
+body.dark-mode .spinner {
+    border-color: #444;
+    border-top-color: #4da3ff;
+}
+
+body.dark-mode .map-button {
+    background: rgba(30, 130, 219, 0.15);
+    border-color: #333;
+    color: #4da3ff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+}
+
+body.dark-mode .map-button:hover {
+    background: rgba(30, 130, 219, 0.3);
+}
+
+body.dark-mode .wishlist-button {
+    background: rgba(147, 48, 172, 0.15);
+    border-color: #333;
+    color: #d18ff0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+}
+
+body.dark-mode .wishlist-button:hover {
+    background: rgba(147, 48, 172, 0.3);
+}
+
+body.dark-mode .wishlist-button.locked {
+    background: #2a2a2a;
+    border-color: #444;
+    color: #666;
+}
+
+body.dark-mode .wishlist-button.added {
+    background: rgba(34, 197, 94, 0.2) !important;
+    border-color: #166534 !important;
+    color: #86efac !important;
+}
+
+body.dark-mode .recommendation-card {
+    background: #1e1e1e;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+body.dark-mode .rec-content {
+    border-top-color: #9330ac;
+}
+
+body.dark-mode .recommendation-card:hover {
+    box-shadow: 0 15px 40px rgba(147, 48, 172, 0.4);
+}
+
+body.dark-mode .rec-header h3 {
+    color: #eee;
+}
+
+body.dark-mode .rec-image-placeholder {
+    background: #2c2c2c;
+    color: #444;
+}
+
+body.dark-mode .rec-desc {
+    color: #aaa;
+}

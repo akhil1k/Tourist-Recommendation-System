@@ -48,3 +48,6 @@ MANIFEST
 # --- Logs ---
 *.log
 flask_session/
+
+# --- Persistent Image Cache (auto-generated on first run) ---
+static/cached_images/

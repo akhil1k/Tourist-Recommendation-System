@@ -20,7 +20,7 @@
                 <div class="avatar-btn" id="avatarBtn">{{ current_user.username[0].upper() }}</div>
                 <div class="user-dropdown" id="userDropdown">
                     <div class="dropdown-header">{{ current_user.username }}</div>
-                    <a href="#">&#128100; Your Profile</a>
+                    <a href="{{ url_for('profile') }}">&#128100; Your Profile</a>
                     <a href="{{ url_for('auth.logout') }}" class="signout-link">&#128274; Sign Out</a>
                 </div>
             </li>
@@ -44,5 +44,7 @@
     </main>
 
     {% include 'avatar_script.html' %}
+    {% include 'footer.html' %}
+    {% include 'theme_toggle.html' %}
 </body>
 </html>

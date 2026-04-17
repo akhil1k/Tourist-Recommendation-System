@@ -6,7 +6,7 @@
 
 body {
     font-family: 'Segoe UI', sans-serif;
-    background: #f8fafc; /* Sleeker premium off-white background */
+    background: #b3b3b3; /* Sleeker premium off-white background */
     color: #333;
 }
 
@@ -19,19 +19,19 @@ body {
     z-index: 1000;
     transition: all 0.4s ease;
     /* This gradient is for the OTHER subpages that don't have JS navbars */
-    background: linear-gradient(135deg, #1e82db, #9330ac); 
+    background: linear-gradient(135deg, #1e82db, #9330ac);
     padding: 15px 0;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 .transparent-nav {
-    background: transparent !important;
+    background: #0000007e;
     box-shadow: none !important;
     padding: 25px 0 !important;
 }
 
 .solid-nav {
-    background: rgba(255, 255, 255, 0.95) !important;
+    background: linear-gradient(135deg, #1e82db, #9330ac);
     backdrop-filter: blur(10px) !important;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
     padding: 12px 0 !important;
@@ -85,11 +85,11 @@ body {
 }
 
 .solid-nav a {
-    color: #333 !important;
+    color: #fff !important;
 }
 
 .solid-nav a:hover {
-    color: #1e82db !important;
+    color: #ffe082 !important;
 }
 
 /* -------------- HEADER (HERO) IMAGE -------------- */
@@ -100,7 +100,7 @@ header {
     color: #fff;
     padding: 0 20px;
     text-align: center;
-    height: 100vh;
+    height: 75vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -159,7 +159,7 @@ header::before {
 /* -------------- OTHER APP PAGES (Forms, Details) -------------- */
 main {
     max-width: 960px;
-    margin: 7rem auto 2rem; /* The 7rem margin prevents the fixed subpage navbar from covering the main content */
+    margin: 2rem auto 2rem; /* The 7rem margin prevents the fixed subpage navbar from covering the main content */
     padding: 2.5rem;
     background: #fff;
     border-radius: 12px;
@@ -185,11 +185,14 @@ input, textarea, select {
     width: 100%;
     padding: 14px 15px;
     margin-bottom: 1.5rem;
-    border: 1px solid #ddd;
+    border: 1px solid #818181;
     border-radius: 8px;
     font-size: 1rem;
     transition: all 0.3s ease;
-    background: #f8fafc;
+    background: #ffffff;
+    color: #333;
+    box-sizing: border-box;
+    resize: none;
 }
 
 input:focus, textarea:focus, select:focus {
@@ -197,6 +200,17 @@ input:focus, textarea:focus, select:focus {
     box-shadow: 0 0 0 3px rgba(30, 130, 219, 0.15);
     outline: none;
     background: #fff;
+    color: #333;
+}
+
+/* Fix Browser Autofill styling overriding colors */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #f8fafc inset !important;
+    -webkit-text-fill-color: #333 !important;
+    transition: background-color 5000s ease-in-out 0s;
 }
 
 button {
@@ -226,97 +240,7 @@ button:hover {
     border-radius: 8px;
 }
 
-/* -------------- RECENT REVIEWS SECTION (Premium Grid Design) -------------- */
-.recent-reviews {
-    max-width: 1200px;
-    margin: 5rem auto;
-    padding: 0 2rem;
-}
 
-.section-title {
-    color: #1e82db;
-    font-size: 2.5rem;
-    font-weight: 800;
-    margin-bottom: 4rem;
-    border: none;
-    text-align: center;
-}
-
-.reviews-grid { 
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 2rem;
-}
-
-.review-card {
-    background: #fff;
-    padding: 2.5rem;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
-    border-top: 5px solid #9330ac;
-    display: flex;
-    flex-direction: column;
-}
-
-.review-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
-}
-
-.review-rating {
-    font-size: 1.3rem;
-    margin-bottom: 10px;
-    letter-spacing: 2px;
-}
-
-.review-place {
-    color: #222;
-    font-size: 1.4rem;
-    font-weight: 800;
-    margin-bottom: 15px;
-}
-
-.review-text {
-    color: #555;
-    font-size: 1.05rem;
-    line-height: 1.7;
-    font-style: italic;
-}
-
-/* Beautiful Empty State HTML structure for when no reviews exist */
-.empty-state {
-    text-align: center;
-    padding: 4rem 2rem;
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-    grid-column: 1 / -1; 
-}
-
-.empty-state p {
-    font-size: 1.2rem;
-    color: #666;
-    margin-bottom: 25px;
-}
-
-.secondary-button {
-    display: inline-block;
-    padding: 12px 35px;
-    background: #fff;
-    color: #1e82db;
-    border: 2px solid #1e82db;
-    border-radius: 50px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
-
-.secondary-button:hover {
-    background: #1e82db;
-    color: #fff;
-}
 
 /* -------------- USER AVATAR DROPDOWN -------------- */
 .user-menu {
@@ -407,3 +331,84 @@ button:hover {
     background: #fff5f5;
     color: #e53935 !important;
 }
+
+/* -------------- DARK MODE -------------- */
+body.dark-mode {
+    background: #121212;
+    color: #e0e0e0;
+}
+
+body.dark-mode main { background: #1e1e1e; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+body.dark-mode .auth-container { background: #1e1e1e; }
+body.dark-mode .solid-nav { background: rgba(30, 30, 30, 0.95) !important; box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important; }
+body.dark-mode .solid-nav a { color: #e0e0e0 !important; }
+body.dark-mode .solid-nav a:hover { color: #4da3ff !important; }
+body.dark-mode input, body.dark-mode textarea, body.dark-mode select { background: #2c2c2c !important; color: #e0e0e0 !important; border-color: #444 !important; }
+body.dark-mode input:focus, body.dark-mode textarea:focus, body.dark-mode select:focus { background: #383838 !important; color: #ffffff !important; }
+
+body.dark-mode input:-webkit-autofill,
+body.dark-mode input:-webkit-autofill:hover, 
+body.dark-mode input:-webkit-autofill:focus, 
+body.dark-mode input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #2c2c2c inset !important;
+    -webkit-text-fill-color: #e0e0e0 !important;
+}
+body.dark-mode h2, body.dark-mode .review-place { color: #4da3ff; }
+body.dark-mode label { color: #bbb; }
+body.dark-mode .output-section { background: #1e1e1e; border-left-color: #4da3ff; }
+
+body.dark-mode .user-dropdown { background: #1e1e1e; border: 1px solid #333; }
+body.dark-mode .user-dropdown a { color: #e0e0e0 !important; }
+body.dark-mode .user-dropdown a:hover { background: #2c2c2c; color: #4da3ff !important; }
+body.dark-mode .dropdown-header { border-bottom-color: #333; }
+body.dark-mode .user-dropdown .signout-link { border-top-color: #333; }
+
+
+/* Nav Theme Toggle Button */
+.nav-theme-toggle {
+    background: transparent !important;
+    border: none !important;
+    font-size: 1.4rem !important;
+    cursor: pointer !important;
+    color: inherit;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    transition: transform 0.2s ease !important;
+    display: inline-flex;
+    align-items: center;
+}
+.nav-theme-toggle:hover {
+    transform: scale(1.2) !important;
+    background: transparent !important;
+}
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: #1e82db;
+    color: white;
+    font-size: 1.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    border: 3px solid rgba(255,255,255,0.2);
+    z-index: 10000;
+    transition: transform 0.3s ease, background 0.3s ease;
+}
+.theme-toggle-btn:hover {
+    transform: scale(1.1) rotate(10deg);
+}
+body.dark-mode .theme-toggle-btn {
+    background: #f59e0b;
+    border-color: rgba(255,255,255,0.1);
+}
+
+

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Uttarakhand Tourism</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
 </head>
 
 <body>
@@ -19,7 +20,7 @@
                     <div class="avatar-btn" id="avatarBtn">{{ current_user.username[0].upper() }}</div>
                     <div class="user-dropdown" id="userDropdown">
                         <div class="dropdown-header">{{ current_user.username }}</div>
-                        <a href="#">&#128100; Your Profile</a>
+                        <a href="{{ url_for('profile') }}">&#128100; Your Profile</a>
                         <a href="{{ url_for('auth.logout') }}" class="signout-link">&#128274; Sign Out</a>
                     </div>
                 </li>
@@ -44,6 +45,71 @@
         </div>
     </header>
 
+    <!-- Features Overview Section -->
+    <section class="features-section">
+        <div class="container">
+            <div class="features-header">
+                <h2 class="section-title" style="border: none; text-align: center;">Your AI Travel Companion</h2>
+                <p class="section-subtitle">Everything you need to perfectly plan your Uttarakhand journey, managed dynamically from a single app.</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>Smart AI Planner</h3>
+                    <p>Enter any destination and let our AI engine instantly generate a curated top-10 list of must-visit attractions, filtered by your exact categories.</p>
+                    <a href="{{ url_for('recommend') }}" class="feature-link">Try the Planner →</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📍</div>
+                    <h3>Live Interactive Maps</h3>
+                    <p>Bridge the gap between planning and traveling. Instantly bounce from any recommended destination directly into a live Google Maps pin.</p>
+                    <a href="{{ url_for('recommend') }}" class="feature-link">Search Places →</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📋</div>
+                    <h3>Interactive Bucket List</h3>
+                    <p>Keep track of every mesmerizing location you see. Save your favorite recommendations directly to your private profile dashboard with one click.</p>
+                    <a href="{{ url_for('profile') }}" class="feature-link">View Your List →</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Verified Safety</h3>
+                    <p>Travel securely with integrated local emergency helplines and a verified community-driven public complaint portal.</p>
+                    <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center;">
+                        <a href="{{ url_for('helplines') }}" class="feature-link">Helplines</a>
+                        <a href="{{ url_for('complaint') }}" class="feature-link">File Complaint</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Places Sub-page Dashboard -->
+    <section class="popular-places">
+        <div class="container">
+            <h2 class="section-title">Top Uttarakhand Destinations</h2>
+            <div class="dest-grid">
+              {% for place in popular_cards %}
+                <div class="dest-card">
+                  <img src="{{ place.image }}" alt="{{ place.name }}">
+                  <div class="dest-content">
+                      <h3>{{ place.name }}</h3>
+                      <p class="dest-cat">{{ place.category }}</p>
+                      
+                      <div class="dest-tags">
+                          <span class="weather-tag" data-city="{{ place.name }}">🌡️ Loading...</span>
+                          <span class="time-tag">📅 {{ place.best_time }}</span>
+                      </div>
+                      
+                      <a href="/place/{{ place.name|urlencode }}" class="dest-explore-btn">Explore {{ place.name }} →</a>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+        </div>
+    </section>
+
     <section class="recent-reviews">
         <div class="container">
             <h2 class="section-title">Verified Explorer Reviews</h2>
@@ -52,9 +118,15 @@
                 {% if reviews %}
                     {% for review in reviews %}
                     <div class="review-card">
-                        <span class="review-rating">
-                            {% for i in range(review.rating) %}⭐{% endfor %}
-                        </span>
+                        <div class="review-header">
+                            <div class="review-author-info">
+                                <div class="review-author-avatar">{{ review.author.username[0].upper() }}</div>
+                                <span class="review-author"><strong>{{ review.author.username }}</strong></span>
+                            </div>
+                            <span class="review-rating">
+                                {% for i in range(review.rating) %}⭐{% endfor %}
+                            </span>
+                        </div>
                         <h3 class="review-place">{{ review.place_name }}</h3>
                         <p class="review-text">"{{ review.review_text }}"</p>
                     </div>
@@ -101,8 +173,20 @@
         window.onload = function() {
             setTimeout(typeWriter, 500); // Wait 0.5s before typing starts
         };
+
+        // 3. Async Weather Loader — runs after page is fully rendered
+        // Each card fetches its own weather independently so they all load in parallel
+        document.querySelectorAll('.weather-tag[data-city]').forEach(function(tag) {
+            const city = tag.getAttribute('data-city');
+            fetch('/api/weather/' + encodeURIComponent(city))
+                .then(r => r.json())
+                .then(data => { tag.textContent = '\uD83C\uDF21\uFE0F ' + data.weather; })
+                .catch(() => { tag.textContent = '\uD83C\uDF21\uFE0F Unavailable'; });
+        });
     </script>
 
+    {% include 'footer.html' %}
+    {% include 'theme_toggle.html' %}
 </body>
 
 </html>

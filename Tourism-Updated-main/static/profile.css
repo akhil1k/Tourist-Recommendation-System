@@ -1,0 +1,260 @@
+/* ---- Profile Page Styles ---- */
+.profile-wrapper {
+    max-width: 960px;
+    margin: 7rem auto 4rem;
+    padding: 0 1.5rem;
+}
+
+/* Hero card */
+.profile-hero {
+    background: linear-gradient(135deg, #1e82db, #9330ac);
+    border-radius: 20px;
+    padding: 2.5rem 3rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    color: #fff;
+    box-shadow: 0 15px 40px rgba(30,130,219,0.3);
+    margin-bottom: 2rem;
+}
+
+.profile-avatar-large {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    border: 4px solid rgba(255,255,255,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.8rem;
+    font-weight: 900;
+    flex-shrink: 0;
+    backdrop-filter: blur(6px);
+}
+
+.profile-info h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0 0 6px;
+}
+
+.profile-info p {
+    opacity: 0.85;
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* Stats strip */
+.stats-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    border-top: 4px solid #1e82db;
+    transition: transform 0.2s;
+}
+
+.stat-card:hover { transform: translateY(-4px); }
+.stat-card:nth-child(2) { border-top-color: #9330ac; }
+.stat-card:nth-child(3) { border-top-color: #f59e0b; }
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: #1e82db;
+    line-height: 1;
+}
+
+.stat-card:nth-child(2) .stat-number { color: #9330ac; }
+.stat-card:nth-child(3) .stat-number { color: #f59e0b; }
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #888;
+    margin-top: 6px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Section cards */
+.section-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+    margin-bottom: 2rem;
+}
+
+.section-card h2 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #1e3a5f;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #f0f4f8;
+    padding-bottom: 0.8rem;
+    border-left: none;
+}
+
+/* Flash messages */
+.flash-box {
+    padding: 12px 18px;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+.flash-success { background: #e8f8f1; color: #1a7a4a; border: 1px solid #b2dfdb; }
+.flash-danger  { background: #fdecea; color: #c0392b; border: 1px solid #f5c6cb; }
+.flash-warning { background: #fff8e1; color: #b7791f; border: 1px solid #fce181; }
+.flash-info    { background: #e8f3fc; color: #1565c0; border: 1px solid #b3d7f5; }
+
+/* Wishlist form */
+.wishlist-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.wishlist-form input,
+.wishlist-form textarea {
+    margin-bottom: 0;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    padding: 12px 14px;
+}
+
+.wishlist-form .full-width { grid-column: 1 / -1; }
+
+.add-btn {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, #1e82db, #9330ac);
+    color: #fff;
+    border: none;
+    padding: 13px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+    width: 100%;
+    margin-top: 0;
+}
+
+.add-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+/* Wishlist items */
+.wishlist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.2rem;
+}
+
+.wishlist-item {
+    background: linear-gradient(135deg, #f8f9ff, #fdf5ff);
+    border: 1px solid #e8eaf6;
+    border-radius: 14px;
+    padding: 1.3rem 1.5rem;
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.wishlist-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.wishlist-item h3 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #1e3a5f;
+    margin: 0 0 6px;
+}
+
+.wishlist-item .location {
+    font-size: 0.85rem;
+    color: #9330ac;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.wishlist-item .notes {
+    font-size: 0.88rem;
+    color: #666;
+    font-style: italic;
+    line-height: 1.5;
+}
+
+.remove-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #fff0f0;
+    color: #e53935;
+    border: 1px solid #ffc4c4;
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: auto;
+    margin: 0;
+}
+
+.remove-btn:hover { background: #ffe0e0; }
+
+/* Reviews list */
+.review-item {
+    border-left: 4px solid #9330ac;
+    padding: 1rem 1.2rem;
+    background: #fdf5ff;
+    border-radius: 0 10px 10px 0;
+    margin-bottom: 1rem;
+}
+
+.review-item h4 {
+    font-size: 1rem;
+    color: #1e3a5f;
+    margin: 0 0 4px;
+    font-weight: 800;
+}
+
+.review-item .stars { color: #f59e0b; font-size: 1.1rem; }
+.review-item p { margin: 6px 0 0; color: #555; font-size: 0.9rem; }
+
+.empty-msg {
+    text-align: center;
+    color: #aaa;
+    padding: 2rem;
+    font-size: 1rem;
+}
+
+.empty-msg span { font-size: 2rem; display: block; margin-bottom: 10px; }
+
+/* Profile Page Dark Mode */
+body.dark-mode .stat-card, body.dark-mode .section-card { background: #1e1e1e; box-shadow: 0 6px 20px rgba(0,0,0,0.5); border-top-color: #1e82db; }
+body.dark-mode .stat-card:nth-child(2) { border-top-color: #9330ac; }
+body.dark-mode .stat-card:nth-child(3) { border-top-color: #f59e0b; }
+body.dark-mode .wishlist-item { background: linear-gradient(135deg, #2a2a35, #2d2530); border-color: #3d3d4b; }
+body.dark-mode .review-item { background: #2d2530; border-left-color: #9330ac; }
+body.dark-mode .section-card h2 { color: #4da3ff; border-bottom-color: #333; }
+body.dark-mode .wishlist-item h3 { color: #e0e0e0; }
+body.dark-mode .review-item h4 { color: #e0e0e0; }
+body.dark-mode .review-item p { color: #aaa; }
+body.dark-mode .empty-msg { color: #777; }
+body.dark-mode .stat-label { color: #aaa; }
+body.dark-mode .wishlist-item .notes { color: #bbb; }
+body.dark-mode .wishlist-item .location { color: #d071e8; }
+body.dark-mode .remove-btn { background: #442222; border-color: #662222; color: #ff6b6b; }
+body.dark-mode .remove-btn:hover { background: #662222; }

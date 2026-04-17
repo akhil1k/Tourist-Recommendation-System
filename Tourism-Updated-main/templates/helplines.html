@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Emergency Helplines</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='helplines.css') }}">
 </head>
 <body>
 
     <header>
         <h1 class="header-title">Uttarakhand Safety Portal</h1>
-        <p class="header-subtitle">Quick Access to Emergency Contacts</p>
+        <p class="header-subtitle">Quick Access to Important Emergency Contacts.</p>
     </header>
 
     <nav class="navigation">
@@ -20,7 +21,7 @@
                 <div class="avatar-btn" id="avatarBtn">{{ current_user.username[0].upper() }}</div>
                 <div class="user-dropdown" id="userDropdown">
                     <div class="dropdown-header">{{ current_user.username }}</div>
-                    <a href="#">&#128100; Your Profile</a>
+                    <a href="{{ url_for('profile') }}">&#128100; Your Profile</a>
                     <a href="{{ url_for('auth.logout') }}" class="signout-link">&#128274; Sign Out</a>
                 </div>
             </li>
@@ -34,18 +35,84 @@
         </ul>
     </nav>
 
-    <main>
-        <h2 class="section-title">Emergency Helplines in Uttarakhand</h2>
-        <ul>
-            <li><strong>Police:</strong> 100</li>
-            <li><strong>Ambulance:</strong> 108</li>
-            <li><strong>Fire Brigade:</strong> 101</li>
-            <li><strong>Tourism Helpline:</strong> 1363</li>
-            <li><strong>Disaster Management:</strong> 1070</li>
-            <li><strong>Forest Department:</strong> 1800-180-4104</li>
-        </ul>
+    <main class="helplines-main">
+        <div class="helplines-grid">
+            <!-- Police -->
+            <div class="helpline-card">
+                <div class="helpline-icon bg-blue">👮</div>
+                <div class="helpline-info">
+                    <h3>Police Control Room</h3>
+                    <span class="helpline-number">100</span>
+                </div>
+            </div>
+
+            <!-- Ambulance -->
+            <div class="helpline-card">
+                <div class="helpline-icon bg-red">🚑</div>
+                <div class="helpline-info">
+                    <h3>Medical Ambulance</h3>
+                    <span class="helpline-number">108</span>
+                </div>
+            </div>
+
+            <!-- Fire Brigade -->
+            <div class="helpline-card">
+                <div class="helpline-icon bg-orange">🚒</div>
+                <div class="helpline-info">
+                    <h3>Fire Brigade</h3>
+                    <span class="helpline-number">101</span>
+                </div>
+            </div>
+
+            <!-- Tourism Helpline -->
+            <div class="helpline-card">
+                <div class="helpline-icon bg-purple">🧳</div>
+                <div class="helpline-info">
+                    <h3>Tourist Helpline</h3>
+                    <span class="helpline-number">1363</span>
+                </div>
+            </div>
+
+            <!-- Disaster Management -->
+            <div class="helpline-card">
+                <div class="helpline-icon bg-yellow">⚠️</div>
+                <div class="helpline-info">
+                    <h3>Disaster Management</h3>
+                    <span class="helpline-number">1070</span>
+                </div>
+            </div>
+
+            <!-- Forest Department -->
+            <div class="helpline-card">
+                <div class="helpline-icon bg-green">🌲</div>
+                <div class="helpline-info">
+                    <h3>Forest Department</h3>
+                    <span class="helpline-number">1800-180-4104</span>
+                </div>
+            </div>
+
+            <!-- Women Helpline -->
+            <div class="helpline-card">
+                <div class="helpline-icon bg-pink">👩🏽</div>
+                <div class="helpline-info">
+                    <h3>Women Helpline</h3>
+                    <span class="helpline-number">1090</span>
+                </div>
+            </div>
+
+            <!-- Cyber Crime -->
+            <div class="helpline-card">
+                <div class="helpline-icon bg-teal">💻</div>
+                <div class="helpline-info">
+                    <h3>Cyber Crime</h3>
+                    <span class="helpline-number">1930</span>
+                </div>
+            </div>
+        </div>
     </main>
 
     {% include 'avatar_script.html' %}
+    {% include 'footer.html' %}
+    {% include 'theme_toggle.html' %}
 </body>
 </html>
