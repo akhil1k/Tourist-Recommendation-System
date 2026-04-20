@@ -1,109 +1,118 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin, login_user, login_required, current_user, logout_user
-from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy.exc import IntegrityError
+from flask_login import LoginManager, login_required, current_user
 import os
 from dotenv import load_dotenv
-from recommender import get_recommendations
 
-# Load env vars from .env
+from models import db, User, Wishlist, Complaint
+from auth import auth
+from recommender import get_recommendations
+from helpers import (get_weather, get_image, get_wikipedia_summary, get_related_places,
+                     get_place_images, popular_places, best_time,
+                     place_coordinates, place_activities, place_how_to_reach, place_facts)
+
+# Load environment variables
 load_dotenv()
 
 app = Flask(__name__)
 
+# -----------------------
+# App Configuration
+# -----------------------
 db_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'tourism.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{db_path}"
-app.config['SECRET_KEY'] = 'mysecret'
-db = SQLAlchemy(app)
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'mysecret')
+
+# -----------------------
+# Initialize Extensions
+# -----------------------
+db.init_app(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'login'
-
-# -----------------------
-# Database models
-# -----------------------
-class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), unique=True, nullable=False)
-    email = db.Column(db.String(100), unique=True, nullable=False)
-    password = db.Column(db.String(200), nullable=False)
-    reviews = db.relationship('Review', backref='author', lazy='dynamic')
-    complaints = db.relationship('Complaint', backref='author', lazy='dynamic')
-
-    def set_password(self, password):
-        self.password = generate_password_hash(password)
-
-    def check_password(self, password):
-        return check_password_hash(self.password, password)
-
-class Review(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    place_name = db.Column(db.String(100), nullable=False)
-    rating = db.Column(db.Integer, nullable=False)
-    review_text = db.Column(db.Text, nullable=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-
-class Complaint(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    complaint_text = db.Column(db.Text, nullable=False)
-    status = db.Column(db.String(50), default='Pending')
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+login_manager.login_view = 'auth.login'   # Points to the Blueprint's login route
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
-
+    return db.session.get(User, int(user_id))
 
 # -----------------------
-# Flask routes
+# Register Blueprints
+# -----------------------
+app.register_blueprint(auth)
+
+# -----------------------
+# Initialize DB Tables
+# -----------------------
+with app.app_context():
+    db.create_all()
+
+# -----------------------
+# Application Routes
 # -----------------------
 @app.route('/')
 def index():
-    return render_template('index.html')
+    from models import Review
+    recent_reviews = Review.query.order_by(Review.id.desc()).limit(5).all()
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
-        hashed_password = generate_password_hash(password)
-        new_user = User(username=username, email=email, password=hashed_password)
-        try:
-            db.session.add(new_user)
-            db.session.commit()
-            flash('Registration successful! Please log in.', 'success')
-            return redirect('/login')
-        except IntegrityError:
-            db.session.rollback()
-            flash('Username or email already exists.', 'danger')
-    return render_template('register.html')
+    cards = []
+    for place in popular_places:
+        name = place["name"]
+        cards.append({
+            "name": name,
+            "category": place["category"],
+            "image": get_image(name),   # served from disk cache — fast
+            "best_time": best_time.get(name, "All year")
+            # weather is loaded client-side via /api/weather/<city>
+        })
 
-# filepath comment kept from your original
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        user = User.query.filter_by(email=email).first()
-        if user and check_password_hash(user.password, password):
-            login_user(user)
-            flash('Login successful!', 'success')
-            return redirect(url_for('index'))
-        else:
-            flash('Login failed. Check your username or password.', 'danger')
-    return render_template('login.html')
+    return render_template('index.html', reviews=recent_reviews, popular_cards=cards)
+
+# Lightweight JSON endpoint for async weather fetching
+@app.route('/api/weather/<city>')
+def api_weather(city):
+    from flask import jsonify
+    return jsonify({"weather": get_weather(city)})
+
+@app.route('/place/<name>')
+def place_detail(name):
+    description = get_wikipedia_summary(name)
+    image = get_image(name)
+    images = get_place_images(name)
+    weather = get_weather(name)
+    recommendations = get_related_places(name)
+
+    coords = place_coordinates.get(name, [30.3165, 78.0322])
+    activities = place_activities.get(name, [])
+    how_to_reach = place_how_to_reach.get(name, {})
+    facts = place_facts.get(name, {})
+
+    return render_template("place.html",
+                           name=name,
+                           description=description,
+                           image=image,
+                           images=images,
+                           weather=weather,
+                           best_time=best_time.get(name, "All year"),
+                           recommendations=recommendations,
+                           coordinates=coords,
+                           activities=activities,
+                           how_to_reach=how_to_reach,
+                           facts=facts)
 
 @app.route('/review', methods=['GET', 'POST'])
 @login_required
 def review():
+    from models import Review
     if request.method == 'POST':
-        place_name = request.form['place_name']
-        rating = int(request.form['rating'])
+        place_name  = request.form['place_name']
+        rating      = int(request.form['rating'])
         review_text = request.form['review_text']
-        new_review = Review(place_name=place_name, rating=rating, review_text=review_text, user_id=current_user.id)
+        new_review  = Review(
+            place_name=place_name,
+            rating=rating,
+            review_text=review_text,
+            user_id=current_user.id
+        )
         db.session.add(new_review)
         try:
             db.session.commit()
@@ -117,9 +126,10 @@ def review():
 @app.route('/complaint', methods=['GET', 'POST'])
 @login_required
 def complaint():
+    from models import Complaint
     if request.method == 'POST':
         complaint_text = request.form['complaint_text']
-        new_complaint = Complaint(complaint_text=complaint_text, user_id=current_user.id)
+        new_complaint  = Complaint(complaint_text=complaint_text, user_id=current_user.id)
         db.session.add(new_complaint)
         try:
             db.session.commit()
@@ -134,28 +144,79 @@ def complaint():
 def recommend():
     recommendations = []
     if request.method == 'POST':
-        destination = request.form['destination'].strip().title()
-        city = request.form['city'].strip().title()
-        country = request.form['country'].strip().title()
+        destination = request.form.get('destination', '').strip().title()
+        city        = request.form.get('city', '').strip().title()
+        country     = request.form.get('country', '').strip().title()
+        category    = request.form.get('category', 'All').strip()
         if not destination or not city or not country:
             recommendations = ["Please provide a valid destination, city, and country."]
             return render_template('recommend.html', recommendations=recommendations)
-
-        recommendations = get_recommendations(destination, city, country)
-    return render_template('recommend.html', recommendations=recommendations)
+        recommendations = get_recommendations(destination, city, country, category)
+        return render_template('recommend.html', recommendations=recommendations, city=city, country=country)
+    return render_template('recommend.html', recommendations=[])
 
 @app.route('/helplines')
 def helplines():
     return render_template('helplines.html')
 
-# -----------------------
-# Initialize DB & run
-# -----------------------
-def init_db():
-    with app.app_context():
-        db.create_all()
 
-init_db()
+# -----------------------
+# Profile Route
+# -----------------------
+@app.route('/profile')
+@login_required
+def profile():
+    from models import Review, Complaint
+    user_reviews   = Review.query.filter_by(user_id=current_user.id).all()
+    user_wishlist  = Wishlist.query.filter_by(user_id=current_user.id).all()
+    user_complaints = Complaint.query.filter_by(user_id=current_user.id).count()
+    return render_template(
+        'profile.html',
+        reviews=user_reviews,
+        wishlist=user_wishlist,
+        complaint_count=user_complaints
+    )
 
+
+# -----------------------
+# Wishlist Routes
+# -----------------------
+@app.route('/wishlist/add', methods=['POST'])
+@login_required
+def wishlist_add():
+    place_name = request.form.get('place_name', '').strip()
+    city       = request.form.get('city', '').strip()
+    country    = request.form.get('country', '').strip()
+    notes      = request.form.get('notes', '').strip()
+    if not place_name:
+        flash('Place name is required.', 'danger')
+        return redirect(url_for('profile'))
+    # Prevent duplicates
+    existing = Wishlist.query.filter_by(user_id=current_user.id, place_name=place_name).first()
+    if existing:
+        flash(f'"{place_name}" is already in your bucket list!', 'warning')
+        return redirect(url_for('profile'))
+    item = Wishlist(place_name=place_name, city=city, country=country, notes=notes, user_id=current_user.id)
+    db.session.add(item)
+    db.session.commit()
+    flash(f'"{place_name}" added to your bucket list!', 'success')
+    return redirect(url_for('profile'))
+
+
+@app.route('/wishlist/remove/<int:item_id>', methods=['POST'])
+@login_required
+def wishlist_remove(item_id):
+    item = Wishlist.query.get_or_404(item_id)
+    if item.user_id != current_user.id:
+        flash('Unauthorized action.', 'danger')
+        return redirect(url_for('profile'))
+    db.session.delete(item)
+    db.session.commit()
+    flash('Place removed from bucket list.', 'info')
+    return redirect(url_for('profile'))
+
+# -----------------------
+# Run
+# -----------------------
 if __name__ == '__main__':
     app.run(debug=True)

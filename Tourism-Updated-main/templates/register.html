@@ -45,12 +45,19 @@
     <!-- Unified Application Navigation -->
     <nav class="navigation">
         <ul class="nav-list">
-            <li><a href="{{ url_for('register') }}">Register</a></li>
-            <li><a href="{{ url_for('login') }}">Login</a></li>
+            {% if current_user.is_authenticated %}
+            <li class="user-menu">
+                <div class="avatar-btn" id="avatarBtn">{{ current_user.username[0].upper() }}</div>
+                <div class="user-dropdown" id="userDropdown">
+                    <div class="dropdown-header">{{ current_user.username }}</div>
+                    <a href="{{ url_for('profile') }}">&#128100; Your Profile</a>
+                    <a href="{{ url_for('auth.logout') }}" class="signout-link">&#128274; Sign Out</a>
+                </div>
+            </li>
+            {% else %}
+            <li><a href="{{ url_for('auth.login') }}">Login/Register</a></li>
+            {% endif %}
             <li><a href="{{ url_for('index') }}">Home</a></li>
-            <li><a href="{{ url_for('review') }}">Submit a Review</a></li>
-            <li><a href="{{ url_for('complaint') }}">File a Complaint</a></li>
-            <li><a href="{{ url_for('recommend') }}">Recommendations</a></li>
         </ul>
     </nav>
 
@@ -83,9 +90,12 @@
         </form>
 
         <div class="toggle-link">
-            Already have an account? <a href="{{ url_for('login') }}">Log in here</a>
+            Already have an account? <a href="{{ url_for('auth.login') }}">Log in here</a>
         </div>
     </div>
 
+    {% include 'avatar_script.html' %}
+    {% include 'footer.html' %}
+    {% include 'theme_toggle.html' %}
 </body>
 </html>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ name }} | Explore Uttarakhand</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Leaflet CSS for Maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body { background-color: #e8e8e8; }
+
+        /* -------- PAGE LAYOUT -------- */
+        .place-main { max-width: 1200px; padding: 2rem; margin-top: 2rem; box-shadow: none; background: transparent; }
+        .place-title { font-size: 3.2rem; color: #1e82db; margin-bottom: 0.5rem; border: none; font-weight: 800; }
+        .place-category { display: inline-block; background: linear-gradient(135deg, #1e82db, #9330ac); color: #fff; padding: 6px 20px; border-radius: 50px; font-weight: 700; font-size: 0.95rem; margin-bottom: 2rem; letter-spacing: 0.5px; }
+
+        /* -------- HERO: GALLERY + FACTS -------- */
+        .hero-row { display: flex; gap: 1.5rem; margin-bottom: 2.5rem; align-items: flex-start; }
+        .gallery-section { flex: 1; min-width: 0; }
+        .gallery-main-wrap { position: relative; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .gallery-main-wrap img { width: 100%; height: 420px; object-fit: cover; display: block; transition: opacity 0.4s ease; }
+        .gallery-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.45); color: #fff; border: none; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; transition: background 0.2s; backdrop-filter: blur(4px); }
+        .gallery-nav:hover { background: rgba(0,0,0,0.7); }
+        .gallery-nav.prev { left: 14px; }
+        .gallery-nav.next { right: 14px; }
+        .gallery-counter { position: absolute; bottom: 14px; right: 14px; background: rgba(0,0,0,0.5); color: #fff; padding: 5px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; backdrop-filter: blur(4px); }
+        .gallery-thumbs { display: flex; gap: 8px; margin-top: 10px; overflow-x: auto; padding-bottom: 4px; }
+        .gallery-thumbs img { width: 90px; height: 64px; object-fit: cover; border-radius: 10px; cursor: pointer; opacity: 0.5; transition: all 0.3s; border: 3px solid transparent; flex-shrink: 0; }
+        .gallery-thumbs img:hover { opacity: 0.8; }
+        .gallery-thumbs img.active { opacity: 1; border-color: #1e82db; }
+
+        /* -------- QUICK FACTS -------- */
+        .quick-facts { width: 320px; flex-shrink: 0; background: #fff; border-radius: 16px; padding: 1.8rem; box-shadow: 0 8px 25px rgba(0,0,0,0.06); }
+        .quick-facts h3 { margin: 0 0 1.2rem 0; font-size: 1.2rem; color: #222; border-bottom: 2px solid #e8f3fc; padding-bottom: 0.8rem; }
+        .fact-item { display: flex; align-items: center; gap: 14px; padding: 11px 0; border-bottom: 1px solid #f5f5f5; }
+        .fact-item:last-child { border-bottom: none; }
+        .fact-icon { width: 42px; height: 42px; background: #e8f3fc; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0; }
+        .fact-text .fact-label { font-size: 0.8rem; color: #999; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .fact-text .fact-value { font-size: 1rem; font-weight: 700; color: #333; margin-top: 2px; }
+
+        /* -------- INFO CARD (About) -------- */
+        .info-card { background: #fff; padding: 2.5rem; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); margin-bottom: 3rem; }
+        .info-card h2 { color: #222; border-bottom: none; margin-top: 0; margin-bottom: 1.2rem; font-size: 1.6rem; }
+        .info-card p { font-size: 1.1rem; line-height: 1.9; color: #444; margin-bottom: 0; }
+
+        /* -------- SECTION TITLES -------- */
+        .section-title { color: #222; border-bottom: none; margin-bottom: 1.5rem; padding-left: 10px; font-size: 1.5rem; position: relative; }
+        .section-title::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 4px; height: 60%; background: linear-gradient(135deg, #1e82db, #9330ac); border-radius: 4px; }
+
+        /* -------- WEATHER / BEST TIME TAGS -------- */
+        .detail-meta { display: flex; gap: 14px; margin-bottom: 2.5rem; flex-wrap: wrap; }
+        .meta-tag { background: #fdf2f8; color: #db2777; padding: 12px 25px; border-radius: 50px; font-weight: bold; font-size: 1.05rem; box-shadow: 0 4px 10px rgba(219, 39, 119, 0.1); }
+        .meta-tag.weather { background: #e8f3fc; color: #1e82db; box-shadow: 0 4px 10px rgba(30, 130, 219, 0.1); }
+
+        /* -------- ACTIVITIES GRID -------- */
+        .activities-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-bottom: 3rem; }
+        .activity-card { background: #fff; padding: 1.6rem; border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.04); transition: transform 0.25s ease, box-shadow 0.25s ease; cursor: default; border: 1px solid #f0f0f0; }
+        .activity-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.08); }
+        .activity-icon { font-size: 2.2rem; margin-bottom: 0.8rem; }
+        .activity-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: #222; }
+        .activity-desc { font-size: 0.92rem; color: #666; line-height: 1.55; }
+
+        /* -------- TRANSPORT GRID -------- */
+        .transport-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-bottom: 3rem; }
+        .transport-card { background: #fff; padding: 2rem 1.5rem; border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.04); text-align: center; border: 1px solid #f0f0f0; transition: transform 0.25s ease; }
+        .transport-card:hover { transform: translateY(-4px); }
+        .transport-icon { font-size: 2.8rem; margin-bottom: 0.8rem; }
+        .transport-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.7rem; color: #222; }
+        .transport-desc { font-size: 0.95rem; color: #666; line-height: 1.6; }
+
+        /* -------- MAP -------- */
+        .map-wrapper { height: 420px; border-radius: 16px; margin-bottom: 3rem; box-shadow: 0 10px 25px rgba(0,0,0,0.08); z-index: 1; overflow: hidden; border: 4px solid #fff; }
+
+        /* -------- RELATED PLACES -------- */
+        .related-badges { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 1rem; margin-bottom: 3rem; }
+        .related-badge { background: #f3f4f6; color: #4b5563; padding: 12px 24px; border-radius: 10px; text-decoration: none; font-weight: 700; transition: all 0.25s; border: 1px solid #e5e7eb; font-size: 1rem; }
+        .related-badge:hover { background: #1e82db; color: #fff; border-color: #1e82db; transform: translateY(-3px); box-shadow: 0 6px 18px rgba(30,130,219,0.25); }
+
+        /* ============== DARK MODE ============== */
+        body.dark-mode .quick-facts { background: #1e1e1e; box-shadow: 0 8px 25px rgba(0,0,0,0.4); }
+        body.dark-mode .quick-facts h3 { color: #eee; border-bottom-color: #333; }
+        body.dark-mode .fact-icon { background: rgba(30,130,219,0.2); }
+        body.dark-mode .fact-text .fact-label { color: #777; }
+        body.dark-mode .fact-text .fact-value { color: #ddd; }
+        body.dark-mode .fact-item { border-bottom-color: #2a2a2a; }
+
+        body.dark-mode .info-card { background: #1e1e1e; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        body.dark-mode .info-card h2 { color: #eee !important; }
+        body.dark-mode .info-card p { color: #aaa !important; }
+
+        body.dark-mode .section-title { color: #eee !important; }
+        body.dark-mode .meta-tag { background: rgba(219, 39, 119, 0.2); }
+        body.dark-mode .meta-tag.weather { background: rgba(30, 130, 219, 0.2); }
+
+        body.dark-mode .activity-card { background: #1e1e1e; border-color: #333; box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
+        body.dark-mode .activity-card:hover { box-shadow: 0 12px 30px rgba(0,0,0,0.5); }
+        body.dark-mode .activity-title { color: #eee; }
+        body.dark-mode .activity-desc { color: #999; }
+
+        body.dark-mode .transport-card { background: #1e1e1e; border-color: #333; box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
+        body.dark-mode .transport-title { color: #eee; }
+        body.dark-mode .transport-desc { color: #999; }
+
+        body.dark-mode .map-wrapper { border-color: #333; }
+        body.dark-mode .related-badge { background: #2a2a2a; color: #ccc; border-color: #444; }
+        body.dark-mode .related-badge:hover { background: #1e82db; color: #fff; }
+        body.dark-mode .gallery-main-wrap { box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+        body.dark-mode .gallery-thumbs img { border-color: transparent; }
+        body.dark-mode .gallery-thumbs img.active { border-color: #4da3ff; }
+
+        /* ============== RESPONSIVE ============== */
+        @media (max-width: 900px) {
+            .hero-row { flex-direction: column; }
+            .quick-facts { width: 100%; }
+            .activities-grid, .transport-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .activities-grid, .transport-grid { grid-template-columns: 1fr; }
+            .place-title { font-size: 2.2rem; }
+            .gallery-main-wrap img { height: 260px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navigation">
+        <ul class="nav-list">
+            <li><a href="{{ url_for('index') }}" class="nav-link">← Back Home</a></li>
+        </ul>
+    </nav>
+
+    <main class="place-main">
+        <!-- Title & Category Badge -->
+        <h1 class="place-title">{{ name }}</h1>
+        {% if facts.category %}
+        <span class="place-category">{{ facts.category }}</span>
+        {% endif %}
+
+        <!-- Hero: Gallery + Quick Facts -->
+        <div class="hero-row">
+            <!-- Image Gallery -->
+            <div class="gallery-section">
+                <div class="gallery-main-wrap">
+                    <img id="galleryMain" src="{{ images[0] }}" alt="{{ name }}">
+                    {% if images|length > 1 %}
+                    <button class="gallery-nav prev" onclick="changeSlide(-1)">❮</button>
+                    <button class="gallery-nav next" onclick="changeSlide(1)">❯</button>
+                    <div class="gallery-counter"><span id="slideNum">1</span> / {{ images|length }}</div>
+                    {% endif %}
+                </div>
+                {% if images|length > 1 %}
+                <div class="gallery-thumbs">
+                    {% for img in images %}
+                    <img src="{{ img }}" onclick="setSlide({{ loop.index0 }})" class="{% if loop.first %}active{% endif %}" alt="View {{ loop.index }}">
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Quick Facts Sidebar -->
+            <div class="quick-facts">
+                <h3>📋 Quick Facts</h3>
+                {% if facts.known_as %}
+                <div class="fact-item">
+                    <div class="fact-icon">⭐</div>
+                    <div class="fact-text">
+                        <div class="fact-label">Known As</div>
+                        <div class="fact-value">{{ facts.known_as }}</div>
+                    </div>
+                </div>
+                {% endif %}
+                {% if facts.elevation %}
+                <div class="fact-item">
+                    <div class="fact-icon">🏔️</div>
+                    <div class="fact-text">
+                        <div class="fact-label">Elevation</div>
+                        <div class="fact-value">{{ facts.elevation }}</div>
+                    </div>
+                </div>
+                {% endif %}
+                {% if facts.district %}
+                <div class="fact-item">
+                    <div class="fact-icon">📍</div>
+                    <div class="fact-text">
+                        <div class="fact-label">District</div>
+                        <div class="fact-value">{{ facts.district }}</div>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="fact-item">
+                    <div class="fact-icon">🌡️</div>
+                    <div class="fact-text">
+                        <div class="fact-label">Current Weather</div>
+                        <div class="fact-value">{{ weather }}</div>
+                    </div>
+                </div>
+                <div class="fact-item">
+                    <div class="fact-icon">📅</div>
+                    <div class="fact-text">
+                        <div class="fact-label">Best Season</div>
+                        <div class="fact-value">{{ best_time }}</div>
+                    </div>
+                </div>
+                {% if facts.ideal_duration %}
+                <div class="fact-item">
+                    <div class="fact-icon">⏰</div>
+                    <div class="fact-text">
+                        <div class="fact-label">Ideal Duration</div>
+                        <div class="fact-value">{{ facts.ideal_duration }}</div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- About Section -->
+        <div class="info-card">
+            <h2>About {{ name }}</h2>
+            <p>{{ description }}</p>
+        </div>
+
+        <!-- Things to Do -->
+        {% if activities %}
+        <h2 class="section-title">Things to Do in {{ name }}</h2>
+        <div class="activities-grid">
+            {% for act in activities %}
+            <div class="activity-card">
+                <div class="activity-icon">{{ act.icon }}</div>
+                <div class="activity-title">{{ act.title }}</div>
+                <div class="activity-desc">{{ act.desc }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- How to Reach -->
+        {% if how_to_reach %}
+        <h2 class="section-title">How to Reach {{ name }}</h2>
+        <div class="transport-grid">
+            {% if how_to_reach.air %}
+            <div class="transport-card">
+                <div class="transport-icon">✈️</div>
+                <div class="transport-title">By Air</div>
+                <p class="transport-desc">{{ how_to_reach.air }}</p>
+            </div>
+            {% endif %}
+            {% if how_to_reach.rail %}
+            <div class="transport-card">
+                <div class="transport-icon">🚂</div>
+                <div class="transport-title">By Rail</div>
+                <p class="transport-desc">{{ how_to_reach.rail }}</p>
+            </div>
+            {% endif %}
+            {% if how_to_reach.road %}
+            <div class="transport-card">
+                <div class="transport-icon">🚗</div>
+                <div class="transport-title">By Road</div>
+                <p class="transport-desc">{{ how_to_reach.road }}</p>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Interactive Map -->
+        <h2 class="section-title">Interactive Explorer Map</h2>
+        <div id="map" class="map-wrapper"></div>
+
+        <!-- Nearby Recommendations -->
+        <h2 class="section-title">Nearby Recommended Excursions</h2>
+        <div class="related-badges">
+          {% for r in recommendations %}
+            <a href="/place/{{ r|urlencode }}" class="related-badge">{{ r }}</a>
+          {% endfor %}
+        </div>
+    </main>
+
+    {% include 'footer.html' %}
+    {% include 'theme_toggle.html' %}
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // -------- Gallery --------
+        const galleryImages = {{ images | tojson }};
+        let currentSlide = 0;
+
+        function setSlide(index) {
+            currentSlide = index;
+            const mainImg = document.getElementById('galleryMain');
+            mainImg.style.opacity = '0';
+            setTimeout(() => {
+                mainImg.src = galleryImages[currentSlide];
+                mainImg.style.opacity = '1';
+            }, 200);
+            document.querySelectorAll('.gallery-thumbs img').forEach((t, i) => {
+                t.classList.toggle('active', i === currentSlide);
+            });
+            const counter = document.getElementById('slideNum');
+            if (counter) counter.textContent = currentSlide + 1;
+        }
+
+        function changeSlide(delta) {
+            setSlide((currentSlide + delta + galleryImages.length) % galleryImages.length);
+        }
+
+        // -------- Map with accurate coordinates --------
+        const coords = {{ coordinates | tojson }};
+        var map = L.map('map').setView(coords, 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+        L.marker(coords).addTo(map).bindPopup('<b>{{ name }}</b>').openPopup();
+    </script>
+</body>
+</html>

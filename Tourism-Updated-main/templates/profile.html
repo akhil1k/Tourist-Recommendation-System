@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ current_user.username }}'s Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
+</head>
+<body>
+
+    <nav class="navigation">
+        <ul class="nav-list">
+            {% if current_user.is_authenticated %}
+            <li class="user-menu">
+                <div class="avatar-btn" id="avatarBtn">{{ current_user.username[0].upper() }}</div>
+                <div class="user-dropdown" id="userDropdown">
+                    <div class="dropdown-header">{{ current_user.username }}</div>
+                    <a href="{{ url_for('profile') }}">&#128100; Your Profile</a>
+                    <a href="{{ url_for('auth.logout') }}" class="signout-link">&#128274; Sign Out</a>
+                </div>
+            </li>
+            {% else %}
+            <li><a href="{{ url_for('auth.login') }}">Login/Register</a></li>
+            {% endif %}
+            <li><a href="{{ url_for('index') }}" class="nav-link">Home</a></li>
+            <li><a href="{{ url_for('review') }}" class="nav-link">Submit Review</a></li>
+            <li><a href="{{ url_for('recommend') }}" class="nav-link">Recommendations</a></li>
+            <li><a href="{{ url_for('helplines') }}" class="nav-link">Helplines</a></li>
+            <li><a href="{{ url_for('complaint') }}" class="nav-link">File Complaint</a></li>
+        </ul>
+    </nav>
+
+    <div class="profile-wrapper">
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="flash-box flash-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <!-- Hero Card -->
+        <div class="profile-hero">
+            <div class="profile-avatar-large">{{ current_user.username[0].upper() }}</div>
+            <div class="profile-info">
+                <h1>{{ current_user.username }}</h1>
+                <p>📧 {{ current_user.email }}</p>
+            </div>
+        </div>
+
+        <!-- Stats Strip -->
+        <div class="stats-strip">
+            <div class="stat-card">
+                <div class="stat-number">{{ reviews|length }}</div>
+                <div class="stat-label">Reviews Written</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ wishlist|length }}</div>
+                <div class="stat-label">Bucket List Places</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ complaint_count }}</div>
+                <div class="stat-label">Complaints Filed</div>
+            </div>
+        </div>
+
+        <!-- Bucket List Section -->
+        <div class="section-card">
+            <h2>🗺️ My Bucket List</h2>
+
+            <!-- Add to Bucket List Form -->
+            <form method="POST" action="{{ url_for('wishlist_add') }}">
+                <div class="wishlist-form">
+                    <input type="text" name="place_name" placeholder="Place name *" required>
+                    <input type="text" name="city" placeholder="City (optional)">
+                    <input type="text" name="country" placeholder="Country (optional)">
+                    <textarea name="notes" placeholder="Notes or why you want to visit... (optional)" rows="2" class="full-width" style="resize: vertical;"></textarea>
+                    <button type="submit" class="add-btn">+ Add to Bucket List</button>
+                </div>
+            </form>
+
+            <!-- Existing Wishlist Items -->
+            {% if wishlist %}
+            <div class="wishlist-grid">
+                {% for item in wishlist %}
+                <div class="wishlist-item">
+                    <h3>📍 {{ item.place_name }}</h3>
+                    {% if item.city or item.country %}
+                    <div class="location">
+                        🌏 {{ [item.city, item.country] | select | join(', ') }}
+                    </div>
+                    {% endif %}
+                    {% if item.notes %}
+                    <p class="notes">"{{ item.notes }}"</p>
+                    {% endif %}
+                    <form method="POST" action="{{ url_for('wishlist_remove', item_id=item.id) }}" style="display:inline;">
+                        <button type="submit" class="remove-btn" onclick="return confirm('Remove from bucket list?')">✕ Remove</button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-msg">
+                <span>🌏</span>
+                Your bucket list is empty! Add your first dream destination above.
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- My Reviews Section -->
+        <div class="section-card">
+            <h2>⭐ My Reviews</h2>
+            {% if reviews %}
+                {% for review in reviews %}
+                <div class="review-item">
+                    <h4>{{ review.place_name }}</h4>
+                    <div class="stars">{% for i in range(review.rating) %}⭐{% endfor %}</div>
+                    {% if review.review_text %}
+                    <p>"{{ review.review_text }}"</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% else %}
+            <div class="empty-msg">
+                <span>✍️</span>
+                You haven't written any reviews yet.
+                <br><a href="{{ url_for('review') }}" style="color: #1e82db; font-weight: bold;">Write your first review →</a>
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+
+    {% include 'avatar_script.html' %}
+    {% include 'footer.html' %}
+    {% include 'theme_toggle.html' %}
+</body>
+</html>

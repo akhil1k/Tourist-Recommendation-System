@@ -1,0 +1,133 @@
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <span class="footer-logo">🏔️ Uttarakhand Tourism</span>
+            <p>Your AI-powered travel companion for exploring the majestic beauty of the Himalayas.</p>
+        </div>
+
+        <div class="footer-links">
+            <h4>Explore</h4>
+            <ul>
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('recommend') }}">AI Recommendations</a></li>
+                <li><a href="{{ url_for('review') }}">Submit a Review</a></li>
+                <li><a href="{{ url_for('helplines') }}">Helplines</a></li>
+                <li><a href="{{ url_for('complaint') }}">File a Complaint</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-links">
+            <h4>Account</h4>
+            <ul>
+                {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('profile') }}">My Profile</a></li>
+                <li><a href="{{ url_for('profile') }}">My Bucket List</a></li>
+                <li><a href="{{ url_for('auth.logout') }}">Sign Out</a></li>
+                {% else %}
+                <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+                <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <div class="footer-links">
+            <h4>Top Destinations</h4>
+            <ul>
+                <li><a href="/place/Rishikesh">Rishikesh</a></li>
+                <li><a href="/place/Nainital">Nainital</a></li>
+                <li><a href="/place/Mussoorie">Mussoorie</a></li>
+                <li><a href="/place/Auli">Auli</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>© 2026 Uttarakhand Tourism. Built with ❤️ for travelers.</p>
+    </div>
+</footer>
+
+<style>
+.site-footer {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: #cbd5e1;
+    margin-top: 5rem;
+    padding-top: 4rem;
+}
+
+.footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem 3rem;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+}
+
+.footer-brand .footer-logo {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #fff;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.footer-brand p {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #94a3b8;
+    margin: 0;
+}
+
+.footer-links h4 {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 1.2rem 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.footer-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+.footer-links a {
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.footer-links a:hover {
+    color: #1e82db;
+}
+
+.footer-bottom {
+    border-top: 1px solid #334155;
+    text-align: center;
+    padding: 1.5rem 2rem;
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+@media (max-width: 768px) {
+    .footer-inner {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+    .footer-brand {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-inner {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
