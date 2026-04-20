@@ -14,12 +14,6 @@ __pycache__/
 .env
 .env.*
 
-# --- Database ---
-tourism.db
-*.db
-*.sqlite
-*.sqlite3
-
 # --- Debug / Temp Scripts ---
 check_db.py
 
