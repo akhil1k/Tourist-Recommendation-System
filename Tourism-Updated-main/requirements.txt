@@ -5,3 +5,4 @@ Werkzeug
 SQLAlchemy
 python-dotenv
 google-genai
+gunicorn
