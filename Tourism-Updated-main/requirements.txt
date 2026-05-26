@@ -1,8 +1,14 @@
 Flask
-Flask-SQLAlchemy
 Flask-Login
-Werkzeug
+Flask-SQLAlchemy
 SQLAlchemy
+Werkzeug
 python-dotenv
-google-genai
+requests
+groq
+Pillow
+scikit-learn
+numpy
+pandas
 gunicorn
+google-genai
